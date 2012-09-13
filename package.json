@@ -1,0 +1,50 @@
+{
+  "name": "less-monitor",
+  "version": "0.0.1",
+  "description": "Monitor and recompile your .less files and dependencies.",
+  "author": {
+    "name": "Guilherme Dupont",
+    "email": "guilhermedupont@gmail.com"
+  },
+  "bin": {
+    "watch-less": "cli.js"
+  },
+  "tags": [
+    "less",
+    "css",
+    "monitor",
+    "watch",
+    "recompile",
+    "development"
+  ],
+  "bin": {
+    "less-monitor": "./cli.js"
+  },
+  "homepage": "https://github.com/gdupont/less-monitor",
+  "bugs": {
+    "url": "https://github.com/gdupont/less-monitor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gdupont/less-monitor.git"
+  },
+  "engines": {
+    "node": ">=0.8.1"
+  },
+  "preferGlobal": "true",
+  "dependencies": {
+    "mootools": ">=1.4.5",
+    "less": "*",
+    "optimist": ">=0.3.4",
+    "moment": ">=1.7.0",
+    "colors": "~0.6.0-1"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "_id": "effortless@0.1.4",
+  "readme": "ERROR: No README.md file found!",
+  "dist": {
+    "shasum": "3203154125074d49e91057afe51979be5f0386fb"
+  },
+  "_from": "less-monitor"
+}
