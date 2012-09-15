@@ -19,7 +19,7 @@ Monitor and recompile your .less files and dependencies.
 ## Instalation
 
 ```
-npm install https://github.com/gdupont/less-monitor.git -g
+npm install -g https://github.com/gdupont/less-monitor/raw/master/npm/less-monitor-0.0.2.tgz
 ```
 
 ## Usage
