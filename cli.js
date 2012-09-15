@@ -16,6 +16,9 @@
 		- Moment.js
 		- Colors
 
+	TODO:
+	[-] .log files
+
 ...
  */
 
@@ -23,41 +26,59 @@
 
 	'use strict';
 
+	// ---------------------------------------------------------------
+	// Dependencies
+	// ---------------------------------------------------------------
 	require('mootools');
 
 	var colors = require('colors'),
 		moment = require('moment');
 
+	// ---------------------------------------------------------------
+	// Start optimist command line tool
+	// ---------------------------------------------------------------
 	var options = require('optimist')
 		.wrap(80)
 		.usage('Usage: {OPTIONS}')
-		.option('compress', {
-			alias: 'c',
-			desc: 'Compresses the output'
-		})
 		.option('directory', {
 			alias: 'd',
 			desc: 'Define the root directory to watch, if this is not defined the program will use the current working directory.'
+		})
+		.option('output', {
+			alias: 'o',
+			desc: 'Define the directory to output the files, if this is not defined the program will use the current file directory.'
 		})
 		.option('extension', {
 			alias: 'e',
 			desc: 'Sets the extension of the files that will be generated. Defaults to .css'
 		})
-		.option('files', {
-			alias: ['find', 'f'],
-			desc: 'Sets the extension of the files that will be watching. Defaults to .less'
-		})
-		.option('interval', {
-			alias: 'ms',
-			desc: 'Sets the interval in miliseconds of the files that will be watching. Defaults to 250'
+		.option('force', {
+			alias: 'f',
+			desc: 'Force to recompile all files on startup before start watching files'
 		})
 		.option('ignore', {
 			alias: 'i',
 			desc: 'Define the ignore file list. Can be a file or directory. Ex: src/_*.less'
 		})
+		.option('interval', {
+			alias: 't',
+			desc: 'Sets the interval in miliseconds of the files that will be watching. Defaults to 250'
+		})
+		.option('nofollow', {
+			alias: 'n',
+			desc: 'Sets true to no follow and watch @import dependencies. Defaults to false'
+		})
 		.option('optimization', {
-			alias: 'o',
+			alias: 'p',
 			desc: 'Sets the optimization level for the less compiler, options are: 0, 1, and 2'
+		})
+		.option('compress', {
+			alias: 'c',
+			desc: 'Compresses the output'
+		})
+		.option('watch', {
+			alias: ['w'],
+			desc: 'Sets the extension of the files that will be watching. Defaults to .less'
 		})
 		.option('help', {
 			alias: 'h',
@@ -80,15 +101,30 @@
 	if (!options.help) {
 		var app = require('./lib/less-monitor.js');
 
+		// Set options used in optimist to the application 
 		app.setOptions(options);
 
-		app.log = function() {
-			var args = Array.slice(arguments, 0);
-			var date = '[' + moment().format('MMM-DD HH:mm:ss') + ']';
-			args.unshift(date.grey);
-			console.log.apply(this, args);
-		};
+		// ---------------------------------------------------------------
+		// Add LOG functions
+		// ---------------------------------------------------------------
+		Object.merge(app, {
+			log: function() {
+				var args = Array.slice(arguments, 0);
+				var date = '[' + moment().format('MMM-DD HH:mm:ss') + ']';
+				args.unshift(date.grey);
+				console.log.apply(this, args);
+			},
+			logLine: function(linebreak) {
+				console.log();
+			},
+			logDivider: function(linebreak) {
+				this.log(new Array(62).join('-').grey + (linebreak ? '\n' : ''));
+			}
+		});
 
+		// ---------------------------------------------------------------
+		// Watch events
+		// ---------------------------------------------------------------
 		app.once("init", function(err) {
 
 			if (err) {
@@ -101,55 +137,91 @@
 			this.log(new Array(62).join("=").grey);
 
 			// Output current options
-			this.log(">".grey, "Current Options:".green);
-			Object.forEach(this.options, function(value, option) {
-				this.log(">".grey, option.capitalize().yellow, "=>".red, typeof value == "string" ? '"' + value + '"' : value.toString().cyan);
-			}, this);
-			this.log(new Array(62).join("=").grey);
+			if (options.options) {
+				this.log(">".grey, "Current Options:".green);
+				Object.forEach(this.options, function(value, option) {
+					this.log(">".grey, option.yellow, "=>".red, typeof value == "string" ? '"' + value + '"' : value.toString().cyan);
+				}, this);
+				this.log(new Array(62).join("=").grey);
+			}
 
 		})
+		// ---------------------------------------------------------------
+		// Watch started
+		// ---------------------------------------------------------------
 		.once("watch", function() {
-			// watch started
-			this.log("[Hint: Press Ctrl+C to quit.]".grey);
-			this.log("Listing Done!".cyan);
+
+			this.log("Watch started.".cyan);
+			this.logLine();
 
 		})
+		// ---------------------------------------------------------------
+		// Show results
+		// ---------------------------------------------------------------
 		.once("results", function(results) {
 
+			this.log("[Hint: Press Ctrl+C to quit.]".grey);
+			this.logLine();
+			this.log("Listing Done!".cyan);
+
+			this.logLine();
 			Object.forEach(results, function(value, key) {
-				this.log("Found".green, key, value ? ("[+" + value + "]").cyan : '');
+				this.log("Found".green, key, value ? ("[+" + value + " dependencies]").cyan : '');
 			}, this);
+			this.logLine();
 
 		})
+		// ---------------------------------------------------------------
+		// Watch file is updated
+		// ---------------------------------------------------------------
 		.on("fileUpdated", function(file, dependencies) { 
 
 			this.log("Updating:".yellow, file);
 
 		})
+		// ---------------------------------------------------------------
+		// Parse completed, saving
+		// ---------------------------------------------------------------
 		.on("parseComplete", function(file, outputFile) {
 
 			this.log("Saving:".green, outputFile);
 
 		})
+		// ---------------------------------------------------------------
+		// Parsed batch complete, if option --force was used
+		// ---------------------------------------------------------------
+		.on("parseCompleteAll", function(filesMap, options) {
+
+			if (options.batch) {
+				this.logLine();
+				this.log("All files parsed.".cyan);
+				this.logLine();
+			}
+
+		})
+		// ---------------------------------------------------------------
+		// LESS parser found a error, output not saved
+		// ---------------------------------------------------------------
 		.on("parseError", function(file, outputFile) {
 
-			this.log("Error parsing:".red, outputFile);
-			this.log(new Array(62).join("-").grey + '\n');
+			this.log("Error parsing:".red, file);
+			this.logDivider(true);
 			process.nextTick(function() {
-				this.log(new Array(62).join("-").grey);
+				this.logDivider();
 			}.bind(this));
 
 		})
-		.on("parseStart", function(file, outputFile) {
-
-			this.log("Parsing to:".yellow, outputFile);
-
-		})
+		// ---------------------------------------------------------------
+		// Show application errors
+		// ---------------------------------------------------------------
 		.on("error", function(e) {
 
 			this.log("ERROR:".red, e.message);
 
 		})
+		// ---------------------------------------------------------------
+		// Show application warning
+		// ---------------------------------------------------------------
 		.on("warn", function(w) {
 
 			this.log("WARN:".yellow, w.message);
