@@ -19,7 +19,7 @@ Monitor and recompile your .less files and dependencies.
 ## Instalation
 
 ```
-npm install -g https://github.com/gdupont/less-monitor/raw/master/npm/less-monitor-0.0.2.tgz
+npm install -g https://github.com/gdupont/less-monitor/raw/master/npm/less-monitor-0.0.4.tgz
 ```
 
 ## Usage
@@ -37,35 +37,42 @@ less-monitor [options]
                       directory.
 
   --output, -o        Define the directory to output the files, if this is not
-                      defined the program will use the current file directory.
+                      defined the program will use the same directory from file.
+
+
+
+  --match, -m         Matching files that will be processed. Defaults to
+                      **/*.less
 
   --extension, -e     Sets the extension of the files that will be generated.
                       Defaults to .css
 
   --force, -f         Force to recompile all files on startup before start
-                      watching files
+                      watching files.
+
+  --ignore, -i        Define the ignore file list. Can be a file or directory.
+                      Ex: **/src/_*.less
 
   --interval, -t      Sets the interval in miliseconds of the files that will
                       be watching. Defaults to 250
 
-  --nofollow, -n      Sets true to no follow and watch @import dependencies.
-                      Defaults to false
+  --nofollow, -n      If set will not follow @import dependencies. Defaults to
+                      false.
 
   --optimization, -p  Sets the optimization level for the less compiler,
-                      options are: 0, 1, and 2
+                      options are: 0, 1, and 2.
 
   --compress, -c      Compresses the output
 
-  --watch, -w         Sets the extension of the files that will be watching.
-                      Defaults to .less
+  --silent, -s        Sets to silent mode. Starts without log output.
+
+  --options, -u       Show options on startup.
+
+  --master, -x        Process only master files. Master files are not dependent
+                      from any others. Defaults to false
+
+  --help, -h          Show this message
 ```
-
-## TODO
-
-- recursive directory listing
-- watch created files
-- unwatch removed files
-- ignore files/directory option
 
 ## License 
 
