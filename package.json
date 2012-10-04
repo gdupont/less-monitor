@@ -1,12 +1,12 @@
 {
   "name": "less-monitor",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Monitor and recompile your .less files and dependencies.",
   "author": {
     "name": "Guilherme Dupont",
     "email": "guilhermedupont@gmail.com"
   },
-  "main": "index",
+  "main": "./index.js",
   "tags": [
     "less",
     "css",
@@ -16,7 +16,7 @@
     "development"
   ],
   "bin": {
-    "less-monitor": "bin/less-monitor"
+    "less-monitor": "./bin/less-monitor"
   },
   "homepage": "https://github.com/gdupont/less-monitor",
   "bugs": {
@@ -33,8 +33,10 @@
   "dependencies": {
     "mootools": ">=1.4.5",
     "less": "*",
-    "optimist": ">=0.3.4",
-    "moment": ">=1.7.0",
-    "colors": ">=0.6.0-1"
+    "optimist": "0.3.4",
+    "moment": "1.7.2",
+    "colors": "0.6.0-1",
+    "minimatch": "0.2.7",
+    "stalker": "0.0.20"
   }
 }
