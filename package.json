@@ -1,17 +1,19 @@
 {
   "name": "less-monitor",
-  "version": "0.1.0",
-  "description": "Monitor and recompile your .less files and dependencies.",
+  "version": "0.2.0",
+  "description": "Monitor and recompile your LESS files with automatic backwards @import parsing.",
   "author": {
     "name": "Guilherme Dupont",
     "email": "guilhermedupont@gmail.com"
   },
-  "main": "./index.js",
+  "main": "./monitor.js",
   "tags": [
     "less",
     "css",
     "monitor",
     "watch",
+    "backwards",
+    "import",
     "recompile",
     "development"
   ],

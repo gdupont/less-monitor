@@ -5,7 +5,10 @@ Monitor and recompile your .less files and dependencies.
 
 ## Features
 
-- Follow and monitor @import files dependencies.
+- Watch and parse found files and @import dependencies.
+- Automatic backwards @import parsing.
+- You can write your own Plugin.
+- Work in progress! More features to come.
 
 ```
 [Sep-15 03:05:52] Found global.less [+5 dependencies]
@@ -13,11 +16,16 @@ Monitor and recompile your .less files and dependencies.
 ```
 
 - Fully customizable. (see options)
-
 - Work in progress! More features to come.
 
 ## Instalation
 
+### Requirements:
+
+- Node.js Platform and npm package manager:
+  - [Visit node.js website](http://nodejs.org/).
+
+### Installing less-monitor
 ```
 npm install less-monitor -g
 ```
@@ -27,6 +35,10 @@ npm install less-monitor -g
 Go to your .less folder and type:
 ```
 less-monitor [options]
+
+## Plugins
+- [less-livereload](https://github.com/gdupont/less-livereload)
+
 ```
 
 ## Options
