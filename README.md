@@ -35,11 +35,10 @@ npm install less-monitor -g
 Go to your .less folder and type:
 ```
 less-monitor [options]
+```
 
 ## Plugins
 - [less-livereload](https://github.com/gdupont/less-livereload)
-
-```
 
 ## Options
 
