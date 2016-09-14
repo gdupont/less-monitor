@@ -50,6 +50,7 @@ less-monitor [options]
   --output, -o        Define the directory to output the files, if this is not
                       defined the program will use the same directory from file.
 
+  --relativeOutput    Output directory will be relative form source files. Defaults to false.
 
 
   --match, -m         Matching files that will be processed. Defaults to
